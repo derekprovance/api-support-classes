@@ -44,6 +44,8 @@ abstract class Request
     private string $token        = '';
     private string $uri          = '';
     private        $verify       = true;
+    private        $sslKey       = null;
+    private        $cert         = null;
     private float  $timeOut      = 3.14;
     private string $responseBody = '';
 
@@ -61,6 +63,30 @@ abstract class Request
     public function setBody(array $body): void
     {
         $this->body = $body;
+    }
+
+    /**
+     * @param float $timeOut
+     */
+    public function setTimeOut(float $timeOut): void
+    {
+        $this->timeOut = $timeOut;
+    }
+
+    /**
+     * @param $sslKey
+     */
+    public function setSslKey(string $sslKey, string $password = null): void
+    {
+        $this->sslKey = $password ? [$sslKey, $password] : $sslKey;
+    }
+
+    /**
+     * @param $cert
+     */
+    public function setCert(string $cert, string $password = null): void
+    {
+        $this->cert = $password ? [$cert, $password]: $cert;
     }
 
     /**
@@ -138,6 +164,22 @@ abstract class Request
     public function getToken()
     {
         return $this->token;
+    }
+
+    /**
+     * @param float $sslKey
+     */
+    public function getSslKey(string $sslKey): void
+    {
+        $this->sslKey = $sslKey;
+    }
+
+    /**
+     * @param float $cert
+     */
+    public function getCert(string $cert): void
+    {
+        $this->cert = $cert;
     }
 
     /**
@@ -341,6 +383,8 @@ abstract class Request
         $opts = [
             'verify'          => $this->verify,
             'connect_timeout' => $this->timeOut,
+            'ssl_key'         => $this->sslKey,
+            'cert'            => $this->$certPath,
         ];
         return new Client($opts);
     }
